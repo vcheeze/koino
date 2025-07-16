@@ -7,10 +7,14 @@ yarn.lock
 .env
 .vercel
 .output
+.netlify
+.nitro
+.tanstack
 /build/
+/dist/
 /api/
 /server/build
-/public/build# Sentry Config File
+/public/build
 .env.sentry-build-plugin
 
 .env.local
