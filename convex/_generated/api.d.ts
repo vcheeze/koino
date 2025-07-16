@@ -13,8 +13,6 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as board from "../board.js";
-import type * as crons from "../crons.js";
 import type * as dailyLog from "../dailyLog.js";
 
 /**
@@ -26,8 +24,6 @@ import type * as dailyLog from "../dailyLog.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  board: typeof board;
-  crons: typeof crons;
   dailyLog: typeof dailyLog;
 }>;
 export declare const api: FilterApi<
