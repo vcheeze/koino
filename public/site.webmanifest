@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "koinó",
+  "short_name": "koinó",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#e94e6d",
+  "background_color": "#f6f2f1",
   "display": "standalone"
 }

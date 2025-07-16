@@ -3,7 +3,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { api } from 'convex/_generated/api'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { CalendarIcon, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { OnSelectHandler } from 'react-day-picker'
 import { CountByPageNumber } from '~/components/charts/count-by-page-number'
@@ -12,12 +12,7 @@ import { NumberTicker } from '~/components/magicui/number-ticker'
 import { TextMorph } from '~/components/motion-primitives/text-morph'
 import { Button, buttonVariants } from '~/components/ui/button'
 import { Calendar } from '~/components/ui/calendar'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from '~/components/ui/card'
+import { Card, CardContent } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import {
@@ -55,9 +50,10 @@ function Home() {
   const upsertDailyLogMutation = useUpsertDailyLogMutation()
 
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [datepickerOpen, setDatepickerOpen] = useState(false)
   // form values
   const [pageNumber, setPageNumber] = useState(date.getDate())
-  const [timeOfDay, setTimeOfDay] = useState('morning')
+  const [timeOfDay, setTimeOfDay] = useState('')
 
   const countByPageNumber = useMemo(() => {
     const pageCounts = dailyLogsQuery.data?.reduce(
@@ -120,7 +116,9 @@ function Home() {
           the prayers.&quot; (Acts 2:42 ESV)
         </blockquote>
         <p className="mt-6 leading-7">
-          koinó helps us live this out, one prayer at a time.
+          <span className="font-semibold">koinó</span> helps us live this out,
+          one prayer at a time, by encouraging fellow members to pray and by
+          reminding them that they are being prayed for.
         </p>
       </div>
       <div className="mb-6 flex justify-end gap-4 font-mono tracking-tighter max-sm:flex-col">
@@ -128,24 +126,53 @@ function Home() {
           <SheetTrigger asChild>
             <Button className="lg:text-base" variant="secondary">
               <Plus className="h-4 w-4" />
-              Log Your Prayer
+              Record Your Prayer
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-11/12 md:max-w-md">
+          <SheetContent className="w-11/12 font-mono tracking-tight md:max-w-md">
             <SheetHeader>
-              <SheetTitle className="lg:text-xl">Log Your Prayer</SheetTitle>
-              <SheetDescription className="lg:text-lg">
+              <SheetTitle>Record Your Prayer</SheetTitle>
+              <SheetDescription>
                 Mention what page in the membership directory you prayed for,
                 and if you want, what time of the day you prayed.
               </SheetDescription>
             </SheetHeader>
             <div className="grid flex-1 auto-rows-min gap-6 px-4">
               <div className="grid gap-3">
-                <Label className="lg:text-lg" htmlFor="page-number">
-                  Page Number
-                </Label>
+                <Label>Date</Label>
+                <Popover onOpenChange={setDatepickerOpen} open={datepickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
+                      data-empty={!date}
+                      variant="outline"
+                    >
+                      <CalendarIcon />
+                      {date ? (
+                        new Intl.DateTimeFormat('en-US', {
+                          dateStyle: 'medium',
+                        }).format(date)
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      onSelect={(value) => {
+                        setDate(value)
+                        setDatepickerOpen(false)
+                      }}
+                      required
+                      selected={date}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="page-number">Page Number</Label>
                 <Input
-                  className="lg:text-lg"
                   id="page-number"
                   max="31"
                   min="1"
@@ -157,27 +184,19 @@ function Home() {
                 />
               </div>
               <div className="grid gap-3">
-                <Label className="lg:text-lg" htmlFor="time-of-day">
-                  Time of Day
-                </Label>
+                <Label htmlFor="time-of-day">Time of Day</Label>
                 <RadioGroup onValueChange={setTimeOfDay} value={timeOfDay}>
                   <div className="flex items-center gap-3">
                     <RadioGroupItem id="morning" value="morning" />
-                    <Label className="lg:text-base" htmlFor="morning">
-                      morning
-                    </Label>
+                    <Label htmlFor="morning">morning</Label>
                   </div>
                   <div className="flex items-center gap-3">
                     <RadioGroupItem id="afternoon" value="afternoon" />
-                    <Label className="lg:text-base" htmlFor="afternoon">
-                      afternoon
-                    </Label>
+                    <Label htmlFor="afternoon">afternoon</Label>
                   </div>
                   <div className="flex items-center gap-3">
                     <RadioGroupItem id="evening" value="evening" />
-                    <Label className="lg:text-base" htmlFor="evening">
-                      evening
-                    </Label>
+                    <Label htmlFor="evening">evening</Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -250,7 +269,32 @@ function Home() {
         </div>
       </div>
       <section>
-        <p className="leading-7">
+        <div className="grid gap-2 md:grid-cols-2 lg:gap-4">
+          <div className="p-6 text-center">
+            <NumberTicker
+              className="font-semibold text-4xl lg:text-5xl"
+              value={410}
+            />
+            <p className="text-muted-foreground leading-7">
+              Current ECCD members
+            </p>
+          </div>
+          {/* TODO: show a different message here when count is 0 */}
+          <div className="p-6 text-center">
+            <div>
+              <NumberTicker
+                className="font-semibold text-3xl lg:text-4xl"
+                value={dailyLogsQuery.data?.length ?? 0}
+              />
+              <span className="text-sm">+</span>
+            </div>
+            <p className="text-muted-foreground leading-7">
+              prayed today -{' '}
+              {countByPageNumber.length > 0 ? 'join them' : 'kick it off'}!
+            </p>
+          </div>
+        </div>
+        {/* <p className="leading-7">
           ECCD has{' '}
           <NumberTicker
             className="font-semibold text-3xl lg:text-4xl"
@@ -258,27 +302,33 @@ function Home() {
           />{' '}
           members.
         </p>
-        {/* TODO: show a different message here when count is 0 */}
         <p className="mt-2 leading-7">
-          Today, at least{' '}
           <NumberTicker
             className="font-semibold text-3xl lg:text-4xl"
             value={dailyLogsQuery.data?.length ?? 0}
-          />{' '}
-          prayed through the membership directory.
-        </p>
+          />
+          + members prayed today - join them!
+        </p> */}
         {dailyLogsQuery.isLoading ? (
           <Skeleton className="mt-8 h-60 bg-muted" />
         ) : (
           <Card className="mt-8">
-            <CardHeader>
-              <CardDescription className="text-base">
-                People prayed through these pages in the membership directory
-                today:
-              </CardDescription>
-            </CardHeader>
             <CardContent>
-              <CountByPageNumber data={countByPageNumber} />
+              {countByPageNumber.length > 0 ? (
+                <CountByPageNumber data={countByPageNumber} />
+              ) : (
+                <div className="flex flex-col items-center justify-center space-y-4 p-8">
+                  <p className="text-muted-foreground">
+                    No prayers recorded yet.
+                  </p>
+                  <Button
+                    className="font-mono"
+                    onClick={() => setSheetOpen(true)}
+                  >
+                    Get others started!
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

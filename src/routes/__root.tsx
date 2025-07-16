@@ -30,7 +30,7 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       ...seo({
-        title: 'Koinó | Fellowship through Prayer',
+        title: 'koinó | Fellowship through Prayer',
         description:
           'A prayer tracking app designed for churches to encourage daily prayer through member directories. Build habits of intercession and unity.',
       }),
