@@ -39,7 +39,12 @@ export const Route = createRootRouteWithContext<{
       { rel: 'stylesheet', href: appCss },
       {
         rel: 'apple-touch-icon',
-        sizes: '180x180',
+        sizes: '192x192',
+        href: '/apple-touch-icon.png',
+      },
+      {
+        rel: 'apple-touch-startup-image',
+        sizes: '192x192',
         href: '/apple-touch-icon.png',
       },
       {
