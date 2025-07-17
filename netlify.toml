@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/proxy/pulse/*"
+  to = "https://eu.i.posthog.com/:splat"
+  status = 200
+  force = true
