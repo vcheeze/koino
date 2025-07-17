@@ -9,6 +9,7 @@ import {
   Scripts,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { PostHogProvider } from 'posthog-js/react'
 import type * as React from 'react'
 import { Toaster } from 'react-hot-toast'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
@@ -89,7 +90,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="font-serif">
-        <ScrollArea className="h-screen">{children}</ScrollArea>
+        <PostHogProvider
+          apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
+          options={{
+            api_host: '/proxy/pulse',
+            defaults: '2025-05-24',
+          }}
+        >
+          <ScrollArea className="h-screen">{children}</ScrollArea>
+        </PostHogProvider>
         <Toaster />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <TanStackRouterDevtools position="bottom-right" />
