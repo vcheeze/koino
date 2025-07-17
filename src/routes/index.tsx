@@ -224,7 +224,7 @@ function Home() {
                 }}
                 type="submit"
               >
-                Save changes
+                Save
               </Button>
               <SheetClose asChild>
                 <Button
@@ -279,11 +279,9 @@ function Home() {
           <div className="p-6 text-center">
             <NumberTicker
               className="font-semibold text-4xl lg:text-5xl"
-              value={410}
+              value={20}
             />
-            <p className="text-muted-foreground leading-7">
-              Current ECCD members
-            </p>
+            <p className="text-muted-foreground leading-7">Current members</p>
           </div>
           {/* TODO: show a different message here when count is 0 */}
           <div className="p-6 text-center">
