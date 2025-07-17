@@ -157,8 +157,9 @@ function Home() {
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="w-auto p-0 font-mono">
                     <Calendar
+                      disabled={{ after: new Date() }}
                       mode="single"
                       onSelect={(value) => {
                         setDate(value)
@@ -256,6 +257,7 @@ function Home() {
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 font-mono">
               <Calendar
+                disabled={{ after: new Date() }}
                 mode="single"
                 onSelect={onSelect}
                 required={false}
@@ -263,7 +265,11 @@ function Home() {
               />
             </PopoverContent>
           </Popover>
-          <Button onClick={() => addDay()} variant="ghost">
+          <Button
+            disabled={date.toDateString() === new Date().toDateString()}
+            onClick={() => addDay()}
+            variant="ghost"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
